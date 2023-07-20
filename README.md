@@ -39,6 +39,18 @@ python manage.py runserver
 
 6. Access the application at [http://localhost:8000](http://localhost:8000)
 
+7. To import the csv file keep it in the location:
+```
+Search_app\search_app\file.csv
+```
+After that go:
+```
+http://127.0.0.1:8000/import/
+```
+
+This will import the csv file onto the databse.
+
+
 ## Usage
 
 - On the homepage, enter a dish name in the search input and click the "Search" button.
