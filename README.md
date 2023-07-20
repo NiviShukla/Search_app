@@ -57,7 +57,6 @@ This will import the csv file onto the databse.
 - The search results will be displayed, showing the dish name, restaurant name, and price.
 - Use the pagination links at the bottom to navigate through the search results.
 - Click on the "View Details" link to see more information about a restaurant.
-- To import data from a CSV file, click on the "Import CSV" button and follow the instructions.
 
 ## Contributing
 
