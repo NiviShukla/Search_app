@@ -1,0 +1,162 @@
+<!-- CSS -->
+<style>
+    /* CSS styles for the search form and search results */
+    .search-form {
+        margin-bottom: 20px;
+    }
+
+    .search-form .search-input {
+        padding: 8px;
+        width: 200px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 16px;
+    }
+
+    .search-form .search-submit {
+        padding: 8px 16px;
+        background-color: #1f7781;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    .search-form .search-submit:hover {
+        background-color: #023c5e;
+    }
+    /* Search Results Styles */
+    .search-results {
+        margin-top: 20px;
+    }
+
+    .search-results h3 {
+        font-size: 20px;
+        margin-bottom: 10px;
+        color: #333;
+    }
+
+    .search-results ul {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    .search-results li {
+        margin-bottom: 5px;
+    }
+
+    .search-results h4 {
+        color: #555;
+        font-size: 18px;
+        margin-bottom: 5px;
+    }
+
+    .search-results p {
+        font-size: 16px;
+        margin-bottom: 5px;
+        color: #777;
+    }
+
+    .search-results a.view-details {
+        display: inline-block;
+        padding: 5px 10px;
+        background-color: #4CAF50;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 4px;
+        transition: background-color 0.3s ease;
+    }
+
+    .search-results a.view-details:hover {
+        background-color: #45a049;
+    }
+
+    .no-results {
+        color: red !important;
+    }
+
+    /* Pagination Styles */
+    .pagination {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pagination .page-link {
+    color: #333;
+    background-color: #f2f2f2;
+    border: none;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+    padding: 8px 12px;
+    margin: 0 4px;
+}
+
+.pagination .page-link:hover {
+    background-color: #e0e0e0;
+}
+
+.pagination .page-link.active {
+    background-color: #4CAF50;
+    color: #fff;
+}
+
+.pagination .page-link:first-child {
+    margin-left: 0;
+}
+
+.pagination .page-link:last-child {
+    margin-right: 0;
+}
+
+.pagination .page-link.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+</style>
+
+<!-- Search Form -->
+<form method="GET" action="{% url 'search_dish' %}" class="search-form">
+    <input type="text" name="query" placeholder="Search for a dish" class="search-input">
+    <input type="submit" value="Search" class="search-submit">
+</form>
+
+<!-- Search Results -->
+{% if query %}
+    <div class="search-results">
+        <h3>Search Results for "{{ query }}" With Minimum Prices</h3>
+        {% if page_obj %}
+            <ul>
+                {% for result in page_obj %}
+                    <li>
+                        <h4>{{ result.name }}</h4>
+                        <p>Restaurant: {{ result.restaurant.name }}</p>
+                        <p>Price: {{ result.price }}</p>
+                        <a class="view-details" href="{% url 'restaurant_details' result.restaurant.id %}">View Details</a>
+                    </li>
+                {% endfor %}
+            </ul>
+            {% if page_obj.has_other_pages %}
+                <div class="pagination">
+                    {% if page_obj.has_previous %}
+                        <a class="page-link" href="?query={{ query }}&page={{ page_obj.previous_page_number }}">Previous</a>
+                    {% endif %}
+                    {% for page in page_obj.paginator.page_range %}
+                        {% if page_obj.number == page %}
+                            <a class="page-link active" href="?query={{ query }}&page={{ page }}">{{ page }}</a>
+                        {% else %}
+                            <a class="page-link" href="?query={{ query }}&page={{ page }}">{{ page }}</a>
+                        {% endif %}
+                    {% endfor %}
+                    {% if page_obj.has_next %}
+                        <a class="page-link" href="?query={{ query }}&page={{ page_obj.next_page_number }}">Next</a>
+                    {% endif %}
+                </div>
+            {% endif %}
+        {% else %}
+            <p class="no-results">No results found.</p>
+        {% endif %}
+    </div>
+{% endif %}

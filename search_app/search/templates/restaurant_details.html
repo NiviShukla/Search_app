@@ -1,0 +1,57 @@
+<!-- CSS -->
+<style>
+    /* CSS styles for the restaurant details */
+    .details-container {
+        background-color: #f2f2f2;
+        padding: 10px;
+        border-radius: 4px;
+        margin-top: 20px;
+    }
+
+    .details-container h2 {
+        color: #333;
+        font-size: 24px;
+        margin-bottom: 10px;
+    }
+
+    .details-container p {
+        font-size: 16px;
+        margin-bottom: 5px;
+    }
+</style>
+
+<!-- Restaurant Details -->
+{% if restaurant %}
+    <div class="details-container">
+        <h2>{{ restaurant.name }}</h2>
+        <p><strong>City:</strong> <span id="city"></span></p>
+        <p><strong>Address:</strong> <span id="address"></span></p>
+        <p><strong>Votes:</strong> <span id="votes"></span></p>
+        <p><strong>Has Online Delivery:</strong> <span id="has-online-delivery"></span></p>
+        <p><strong>Book Form Web View URL:</strong> <span id="book-form-web-view-url"></span></p>
+        <!-- Add more details as needed -->
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // The JSON string from the server
+        var jsonString = '{{ restaurant.full_details|safe }}';
+
+        // Parse the JSON string into an object
+        var data = JSON.parse(jsonString);
+
+        // Extract the desired values
+        var city = data.location.city;
+        var address = data.location.address;
+        var votes = data.user_rating.votes;
+        var hasOnlineDelivery = data.has_online_delivery;
+        var bookFormWebViewUrl = data.book_form_web_view_url;
+
+        // Display the extracted values in the HTML elements
+        document.getElementById('city').textContent = city;
+        document.getElementById('address').textContent = address;
+        document.getElementById('votes').textContent = votes;
+        document.getElementById('has-online-delivery').textContent = hasOnlineDelivery ? 'Yes' : 'No';
+        document.getElementById('book-form-web-view-url').textContent = bookFormWebViewUrl ? 'Yes' : 'No' ;
+    </script>
+{% endif %}
