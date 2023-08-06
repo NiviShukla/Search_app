@@ -1,8 +1,8 @@
 import csv
 from django.shortcuts import render , get_object_or_404
 from .models import Restaurant, MenuItem
-from django.db.models import Q
 from django.core.paginator import Paginator
+from django.contrib.auth.decorators import login_required
 
 
 def import_dish_data(request):
@@ -35,7 +35,7 @@ def import_dish_data(request):
     return render(request, 'search.html')
 
 
-
+@login_required
 def search_dish(request):
     query = request.GET.get('query')
     results = []
@@ -54,8 +54,13 @@ def search_dish(request):
 
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number) if page_number else paginator.get_page(1)  # Set page_obj to the first page if page_number is not provided
+        searches = request.session.get('searches', [])
+        searches.insert(0, query)
+        request.session['searches'] = searches[:5]
+    
+    last_searches = request.session.get('searches', [])
 
-    return render(request, 'search.html', {'results': results, 'query': query, 'restaurants': restaurants, 'page_obj': page_obj})
+    return render(request, 'search.html', {'results': results, 'query': query, 'restaurants': restaurants, 'page_obj': page_obj, 'last_searches': last_searches})
 
 
 
@@ -63,3 +68,5 @@ def restaurant_details(request, restaurant_id):
     restaurant = get_object_or_404(Restaurant, pk=restaurant_id)
     full_details = restaurant.full_details  # Assuming full_details is a dictionary
     return render(request, 'restaurant_details.html', {'restaurant': restaurant, 'full_details': full_details})
+
+
